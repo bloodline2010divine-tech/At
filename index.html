@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0b0b0b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Attendly">
+<title>Attendly — Student Attendance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080808;--surface:#121212;--surface2:#191919;--surface3:#222;
+  --green:#1ed760;--green2:#18b653;--text:#fff;--muted:#a7a7a7;
+  --red:#e45757;--line:#292929;--radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+body{padding-bottom:82px;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:760px;margin:auto}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(8,8,8,.94);backdrop-filter:blur(16px);padding:18px 18px 12px;border-bottom:1px solid #151515}
+.brandline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem}
+.logoMark{width:34px;height:34px;border-radius:50%;background:var(--green);color:#000;display:grid;place-items:center;font-weight:900}
+.profileBtn{width:38px;height:38px;border:0;border-radius:50%;background:#292929;color:#fff;font-weight:800}
+.page{padding:18px}
+h1{font-size:1.65rem;margin:0 0 5px;font-weight:800}
+h2{font-size:1.15rem;margin:0 0 12px}
+h3{margin:0;font-size:1rem}
+.muted{color:var(--muted);font-size:.82rem}
+.hero{padding:12px 0 18px}
+.hero h1{font-size:1.9rem}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:linear-gradient(145deg,#1a1a1a,#101010);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.stat .icon{font-size:1.25rem;margin-bottom:13px}
+.stat .num{font-size:1.8rem;font-weight:800}
+.stat .label{color:var(--muted);font-size:.78rem;margin-top:3px}
+.green{color:var(--green)}
+.red{color:var(--red)}
+.section{margin-top:24px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.list{display:flex;flex-direction:column;gap:8px}
+.listItem{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:12px;padding:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#2b2b2b;display:grid;place-items:center;font-weight:800;color:var(--green);flex-shrink:0}
+.itemMain{min-width:0;flex:1}
+.itemMain strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.itemMain span{display:block;color:var(--muted);font-size:.74rem;margin-top:3px}
+.pill{padding:5px 9px;border-radius:20px;font-size:.7rem;font-weight:700}
+.pill.present{background:rgba(30,215,96,.13);color:var(--green)}
+.pill.absent{background:rgba(228,87,87,.13);color:#ff7b7b}
+.btn{border:0;border-radius:25px;padding:11px 17px;font-weight:700;background:var(--green);color:#000}
+.btn:hover{background:#38e879}
+.btn.secondary{background:#292929;color:#fff}
+.btn.danger{background:transparent;color:#ff7b7b;border:1px solid #4a2626}
+.btn.full{width:100%}
+.input,.select,.textarea{width:100%;background:#202020;border:1px solid #333;color:#fff;border-radius:10px;padding:12px;outline:none}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--green)}
+.textarea{min-height:110px;resize:vertical}
+.field{margin-bottom:13px}
+.field label{display:block;color:#cfcfcf;font-size:.75rem;font-weight:600;margin-bottom:6px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.search{margin-bottom:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:rgba(18,18,18,.96);backdrop-filter:blur(18px);border-top:1px solid #2a2a2a}
+.navInner{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.nav button{background:none;border:0;color:#888;padding:10px 3px 9px;font-size:.68rem;font-weight:600}
+.nav button .navIcon{display:block;font-size:1.25rem;margin-bottom:3px}
+.nav button.active{color:#fff}.nav button.active .navIcon{color:var(--green)}
+.attendanceRow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.attendanceRow:last-child{border-bottom:0}
+.statusBtns{display:flex;background:#242424;border-radius:22px;padding:3px;margin-left:auto}
+.statusBtns button{border:0;background:transparent;color:#aaa;border-radius:19px;padding:8px 12px;font-size:.72rem;font-weight:800}
+.statusBtns button.activeP{background:var(--green);color:#000}
+.statusBtns button.activeA{background:var(--red);color:#fff}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.summary .mini{background:#191919;border-radius:10px;padding:11px;text-align:center}
+.mini b{display:block;font-size:1.25rem}.mini span{font-size:.7rem;color:var(--muted)}
+.progress{height:8px;background:#292929;border-radius:10px;overflow:hidden;margin-top:10px}
+.progress div{height:100%;background:var(--green)}
+.empty{text-align:center;background:var(--surface);border:1px dashed #383838;padding:28px 15px;border-radius:14px;color:var(--muted)}
+.modalBack{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.modal{width:min(760px,100%);background:#181818;border-radius:20px 20px 0 0;padding:22px;max-height:90vh;overflow:auto}
+.modalBack.show{display:flex}
+.close{border:0;background:#292929;color:#fff;border-radius:50%;width:34px;height:34px}
+.toast{position:fixed;z-index:80;left:50%;bottom:94px;transform:translateX(-50%);background:#fff;color:#000;padding:11px 17px;border-radius:24px;font-size:.8rem;font-weight:700;display:none;white-space:nowrap}
+.toast.show{display:block}
+.login{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 10%,#193d28,#080808 48%);display:flex;align-items:center;justify-content:center;padding:22px}
+.loginBox{width:min(430px,100%);background:rgba(20,20,20,.95);border:1px solid #303030;border-radius:22px;padding:26px;box-shadow:0 25px 80px #000}
+.loginLogo{width:60px;height:60px;border-radius:50%;background:var(--green);color:#000;display:grid;place-items:center;font-size:1.6rem;font-weight:900;margin-bottom:18px}
+.login h1{font-size:1.8rem}.login p{color:var(--muted);font-size:.82rem;line-height:1.5}
+.setupNote{font-size:.7rem;color:#777;margin-top:12px;line-height:1.5}
+.hidden{display:none!important}
+.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th,td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--line);font-size:.76rem}
+th{color:#aaa;font-size:.68rem;text-transform:uppercase}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}.page{padding:22px}.hero h1{font-size:2.2rem}}
+</style>
+</head>
+<body>
+
+<div id="login" class="login">
+  <div class="loginBox">
+    <div class="loginLogo">✓</div>
+    <h1>Welcome to Attendly</h1>
+    <p id="loginText">Sign in to manage your student attendance register.</p>
+    <div id="setupFields" class="hidden">
+      <div class="field"><label>Create username</label><input id="setupUser" class="input" autocomplete="username"></div>
+      <div class="field"><label>Create password</label><input id="setupPass" class="input" type="password" autocomplete="new-password"></div>
+      <button class="btn full" id="createAccount">Create Account</button>
+      <div class="setupNote">This quick version stores the account and attendance data in this browser. It is suitable for a school/demo project, not high-security production use.</div>
+    </div>
+    <div id="loginFields">
+      <div class="field"><label>Username</label><input id="loginUser" class="input" autocomplete="username"></div>
+      <div class="field"><label>Password</label><input id="loginPass" class="input" type="password" autocomplete="current-password"></div>
+      <button class="btn full" id="loginBtn">Log In</button>
+    </div>
+    <p id="loginError" class="red" style="display:none;margin-top:12px">Incorrect username or password.</p>
+  </div>
+</div>
+
+<div class="app hidden" id="app">
+  <header class="topbar">
+    <div class="brandline">
+      <div class="logo"><div class="logoMark">✓</div>Attendly</div>
+      <button class="profileBtn" id="profileBtn">T</button>
+    </div>
+  </header>
+
+  <main class="page" id="content"></main>
+
+  <nav class="nav">
+    <div class="navInner">
+      <button data-tab="home" class="active"><span class="navIcon">⌂</span>Home</button>
+      <button data-tab="learners"><span class="navIcon">👥</span>Learners</button>
+      <button data-tab="attendance"><span class="navIcon">✓</span>Attendance</button>
+      <button data-tab="reports"><span class="navIcon">▥</span>Reports</button>
+      <button data-tab="settings"><span class="navIcon">⚙</span>Settings</button>
+    </div>
+  </nav>
+</div>
+
+<div class="modalBack" id="modalBack">
+  <div class="modal" id="modal"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY="attendly-data-v1", ACCOUNT="attendly-account-v1";
+let state={learners:[],attendance:[],teacher:"Teacher"};
+let tab="home", attDate=new Date().toISOString().slice(0,10), draft={};
+
+const $=id=>document.getElementById(id);
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function initials(name){return (name||"T").split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2200)}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function load(){try{state=JSON.parse(localStorage.getItem(KEY))||state}catch(e){} state.learners??=[];state.attendance??=[]}
+async function hash(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+
+async function initAuth(){
+  const account=localStorage.getItem(ACCOUNT);
+  if(!account){
+    $("setupFields").classList.remove("hidden");$("loginFields").classList.add("hidden");
+    $("loginText").textContent="Create your teacher account to start.";
+  }
+}
+$("createAccount").onclick=async()=>{
+  const u=$("setupUser").value.trim(),p=$("setupPass").value;
+  if(!u||p.length<4){$("loginError").style.display="block";$("loginError").textContent="Enter a username and a password of at least 4 characters.";return}
+  localStorage.setItem(ACCOUNT,JSON.stringify({username:u,password:await hash(p)}));
+  $("setupFields").classList.add("hidden");$("loginFields").classList.remove("hidden");$("loginText").textContent="Account created. Log in to continue.";toast("Account created");
+};
+$("loginBtn").onclick=login;
+$("loginPass").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+async function login(){
+  const a=JSON.parse(localStorage.getItem(ACCOUNT)||"null");
+  if(!a)return;
+  const ok=$("loginUser").value.trim()===a.username && await hash($("loginPass").value)===a.password;
+  $("loginError").style.display=ok?"none":"block";
+  if(ok){$("login").classList.add("hidden");$("app").classList.remove("hidden");load();render()}
+}
+$("profileBtn").onclick=()=>{tab="settings";syncNav();render()}
+
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;syncNav();render()});
+function syncNav(){document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab))}
+function render(){({home:home,learners:learners,attendance:attendance,reports:reports,settings:settings}[tab]||home)()}
+
+function home(){
+  const today=state.attendance.filter(a=>a.date===attDate), total=state.learners.length;
+  const present=today.filter(a=>a.status==="Present").length, absent=today.filter(a=>a.status==="Absent").length;
+  const pct=total?Math.round(present/total*100):0;
+  const recent=state.attendance.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
+  $("content").innerHTML=`
+    <div class="hero"><div class="muted">Good day, ${esc(state.teacher||"Teacher")} 👋</div><h1>Your attendance hub</h1><div class="muted">Everything you need to manage your class in one place.</div></div>
+    <div class="grid">
+      <div class="card stat"><div class="icon">👥</div><div class="num">${total}</div><div class="label">Learners</div></div>
+      <div class="card stat"><div class="icon green">✓</div><div class="num">${present}</div><div class="label">Present today</div></div>
+      <div class="card stat"><div class="icon red">×</div><div class="num">${absent}</div><div class="label">Absent today</div></div>
+      <div class="card stat"><div class="icon">%</div><div class="num">${pct}%</div><div class="label">Attendance today</div></div>
+    </div>
+    <div class="section">
+      <div class="row"><h2>Quick actions</h2></div>
+      <div class="actions">
+        <button class="btn" id="quickAttend">✓ Mark Attendance</button>
+        <button class="btn secondary" id="quickLearners">+ Add Learners</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="row"><h2>Recent activity</h2><button class="btn secondary" id="seeReports">View all</button></div>
+      ${recent.length?`<div class="list">${recent.map(a=>{let l=state.learners.find(x=>x.id===a.learnerId);return `<div class="listItem"><div class="avatar">${initials(l?.name||"?")}</div><div class="itemMain"><strong>${esc(l?.name||"Removed learner")}</strong><span>${a.date} · ${esc(a.teacher||"Teacher")}</span></div><span class="pill ${a.status.toLowerCase()}">${a.status}</span></div>`}).join("")}</div>`:`<div class="empty">No attendance has been saved yet.</div>`}
+    </div>`;
+  $("quickAttend").onclick=()=>{tab="attendance";syncNav();render()};
+  $("quickLearners").onclick=()=>{tab="learners";syncNav();render()};
+  $("seeReports").onclick=()=>{tab="reports";syncNav();render()};
+}
+
+function learners(){
+  $("content").innerHTML=`
+    <div class="hero"><div class="muted">Class management</div><h1>Learners</h1><div class="muted">${state.learners.length} learner${state.learners.length===1?"":"s"} in your register.</div></div>
+    <button class="btn full" id="addBtn">+ Add Learners</button>
+    <div class="section"><input id="learnerSearch" class="input search" placeholder="Search learners...">
+    <div id="learnerList" class="list"></div></div>`;
+  const draw=()=>{
+    const q=$("learnerSearch").value.toLowerCase();
+    const ls=state.learners.filter(l=>l.name.toLowerCase().includes(q)||l.admissionNo.toLowerCase().includes(q));
+    $("learnerList").innerHTML=ls.length?ls.map(l=>`<div class="listItem"><div class="avatar">${initials(l.name)}</div><div class="itemMain"><strong>${esc(l.name)}</strong><span>${esc(l.admissionNo)}${l.className?" · "+esc(l.className):""}</span></div><button class="btn danger" data-remove="${l.id}">Remove</button></div>`).join(""):`<div class="empty">No learners found.</div>`;
+    $("learnerList").querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeLearner(b.dataset.remove));
+  };
+  $("learnerSearch").oninput=draw;$("addBtn").onclick=addModal;draw();
+}
+function addModal(){
+  $("modal").innerHTML=`<div class="row"><h2>Add learners</h2><button class="close" onclick="closeModal()">×</button></div>
+  <p class="muted">Paste one learner per line. You can also use Name, Admission Number.</p>
+  <div class="field"><label>Class (optional)</label><input id="mClass" class="input" placeholder="e.g. Form 4A"></div>
+  <div class="field"><label>Names</label><textarea id="mNames" class="textarea" placeholder="Tadiwa Moyo\nRufaro Ncube\nBlessing Chikafu"></textarea></div>
+  <button class="btn full" id="saveLearners">Add Learners</button>`;
+  openModal();$("saveLearners").onclick=()=>{
+    const cls=$("mClass").value.trim(),lines=$("mNames").value.split("\n").map(x=>x.trim()).filter(Boolean);
+    if(!lines.length){toast("Enter at least one learner");return}
+    lines.forEach(line=>{const p=line.split(",").map(x=>x.trim()),name=p[0];if(name)state.learners.push({id:uid(),name,admissionNo:p[1]||nextAdm(),className:p[2]||cls})});
+    save();closeModal();toast(`${lines.length} learner${lines.length===1?"":"s"} added`);learners();
+  };
+}
+function nextAdm(){let n=state.learners.length+1,c="S"+String(n).padStart(3,"0");while(state.learners.some(x=>x.admissionNo===c)){n++;c="S"+String(n).padStart(3,"0")}return c}
+function removeLearner(id){if(!confirm("Remove this learner and their attendance history?"))return;state.learners=state.learners.filter(x=>x.id!==id);state.attendance=state.attendance.filter(x=>x.learnerId!==id);save();toast("Learner removed");learners()}
+
+function attendance(){
+  if(!state.learners.length){$("content").innerHTML=`<div class="hero"><h1>Attendance</h1></div><div class="empty">Add learners first, then you can mark attendance.</div>`;return}
+  draft={};state.learners.forEach(l=>{const a=state.attendance.find(x=>x.learnerId===l.id&&x.date===attDate);draft[l.id]=a?.status||"Present"});
+  drawAttendance();
+}
+function drawAttendance(){
+  const total=state.learners.length,p=Object.values(draft).filter(x=>x==="Present").length,a=total-p,pct=total?Math.round(p/total*100):0;
+  $("content").innerHTML=`<div class="hero"><div class="muted">${attDate}</div><h1>Mark Attendance</h1><div class="muted">Tap a status for each learner.</div></div>
+  <div class="field"><label>Date</label><input id="dateInput" type="date" class="input" value="${attDate}"></div>
+  <div class="summary"><div class="mini"><b class="green">${p}</b><span>Present</span></div><div class="mini"><b class="red">${a}</b><span>Absent</span></div><div class="mini"><b>${total}</b><span>Total</span></div></div>
+  <div class="card"><div class="row"><strong>Attendance ${pct}%</strong><span class="muted">${p}/${total}</span></div><div class="progress"><div style="width:${pct}%"></div></div></div>
+  <div class="actions" style="margin:14px 0"><button class="btn secondary" id="allPresent">Mark all present</button></div>
+  <div class="card">${state.learners.map(l=>`<div class="attendanceRow"><div class="avatar">${initials(l.name)}</div><div class="itemMain"><strong>${esc(l.name)}</strong><span>${esc(l.admissionNo)}${l.className?" · "+esc(l.className):""}</span></div><div class="statusBtns" data-id="${l.id}"><button class="${draft[l.id]==="Present"?"activeP":""}" data-s="Present">P</button><button class="${draft[l.id]==="Absent"?"activeA":""}" data-s="Absent">A</button></div></div>`).join("")}</div>
+  <button class="btn full" style="margin-top:14px" id="saveAtt">Save Attendance</button>`;
+  $("dateInput").onchange=e=>{attDate=e.target.value;attendance()};
+  $("allPresent").onclick=()=>{state.learners.forEach(l=>draft[l.id]="Present");drawAttendance()};
+  document.querySelectorAll(".statusBtns").forEach(box=>box.querySelectorAll("button").forEach(b=>b.onclick=()=>{draft[box.dataset.id]=b.dataset.s;drawAttendance()}));
+  $("saveAtt").onclick=()=>{
+    state.attendance=state.attendance.filter(x=>x.date!==attDate);
+    state.learners.forEach(l=>state.attendance.push({id:uid(),learnerId:l.id,date:attDate,status:draft[l.id],teacher:state.teacher||"Teacher"}));
+    save();toast("Attendance saved");drawAttendance();
+  };
+}
+
+function reports(){
+  $("content").innerHTML=`<div class="hero"><div class="muted">Attendance history</div><h1>Reports</h1><div class="muted">Search by date or learner name and export your records.</div></div>
+  <div class="actions"><input id="reportQ" class="input" style="flex:1" placeholder="Search date or name"><button class="btn secondary" id="csv">CSV</button></div>
+  <div id="reportBox" class="section"></div>`;
+  $("reportQ").oninput=drawReports;$("csv").onclick=exportCsv;drawReports();
+}
+function drawReports(){
+  const q=($("reportQ")?.value||"").toLowerCase().trim();
+  const rows=state.attendance.map(a=>{const l=state.learners.find(x=>x.id===a.learnerId);return {...a,name:l?.name||"Removed learner",className:l?.className||"",adm:l?.admissionNo||""}}).filter(r=>!q||r.date.includes(q)||r.name.toLowerCase().includes(q)).sort((x,y)=>y.date.localeCompare(x.date));
+  $("reportBox").innerHTML=rows.length?`<div class="tableWrap"><table><thead><tr><th>Date</th><th>Learner</th><th>Adm</th><th>Status</th><th>Teacher</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.date}</td><td>${esc(r.name)}</td><td>${esc(r.adm)}</td><td><span class="pill ${r.status.toLowerCase()}">${r.status}</span></td><td>${esc(r.teacher)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">No records found.</div>`;
+}
+function exportCsv(){
+  const rows=state.attendance.map(a=>{const l=state.learners.find(x=>x.id===a.learnerId);return [a.date,l?.name||"Removed learner",l?.className||"",a.status,a.teacher||""]});
+  if(!rows.length){toast("Nothing to export");return}
+  const csv=[["Date","Name","Class","Status","Marked by"],...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const u=URL.createObjectURL(new Blob([csv],{type:"text/csv"})),a=document.createElement("a");a.href=u;a.download="attendance-report.csv";a.click();URL.revokeObjectURL(u);toast("CSV exported");
+}
+
+function settings(){
+  const a=JSON.parse(localStorage.getItem(ACCOUNT)||"{}");
+  $("content").innerHTML=`<div class="hero"><div class="muted">Account & app</div><h1>Settings</h1></div>
+  <div class="card">
+    <div class="row"><div><strong>Teacher profile</strong><div class="muted">Name shown on attendance records</div></div><div class="avatar">${initials(state.teacher)}</div></div>
+    <div class="field" style="margin-top:15px"><label>Teacher name</label><input id="teacherName" class="input" value="${esc(state.teacher)}"></div>
+    <button class="btn" id="saveProfile">Save Profile</button>
+  </div>
+  <div class="card section"><h3>Change login details</h3><p class="muted">Change your username and password.</p>
+    <div class="field"><label>New username</label><input id="newUser" class="input" value="${esc(a.username||"")}"></div>
+    <div class="field"><label>New password</label><input id="newPass" type="password" class="input" placeholder="At least 4 characters"></div>
+    <button class="btn" id="changeLogin">Update Login</button>
+  </div>
+  <div class="card section"><h3>Data</h3><p class="muted">Your current quick version stores data on this device/browser.</p><button class="btn danger" id="clearData">Clear Attendance & Learners</button></div>
+  <button class="btn secondary full section" id="logout">Log Out</button>`;
+  $("saveProfile").onclick=()=>{state.teacher=$("teacherName").value.trim()||"Teacher";save();toast("Profile saved");settings()};
+  $("changeLogin").onclick=async()=>{const u=$("newUser").value.trim(),p=$("newPass").value;if(!u||p.length<4){toast("Use a username and 4+ character password");return}localStorage.setItem(ACCOUNT,JSON.stringify({username:u,password:await hash(p)}));toast("Login details updated")};
+  $("clearData").onclick=()=>{if(confirm("Clear all learners and attendance records?")){state={learners:[],attendance:[],teacher:state.teacher};save();toast("Data cleared");settings()}};
+  $("logout").onclick=()=>{location.reload()};
+}
+
+function openModal(){$("modalBack").classList.add("show")}
+function closeModal(){$("modalBack").classList.remove("show")}
+$("modalBack").onclick=e=>{if(e.target.id==="modalBack")closeModal()}
+
+initAuth();
+</script>
+</body>
+</html>
